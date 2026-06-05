@@ -224,11 +224,11 @@ class JlptWordWidgetProvider : AppWidgetProvider() {
             exampleEnSp = 9f,
             exampleJaLines = 1,
             exampleEnLines = 1,
-            // The example sentence stays at every size. Compact makes room by
-            // merging the kana into one row and dropping the EN translation,
-            // keeping the JA example on a single ellipsized line at the bottom.
+            // The example sentence stays at every size. The JA sentence and its
+            // EN translation share one row (JA left, EN right), so the
+            // translation fits even in Compact instead of being dropped.
             showExample = true,
-            showEnglishExample = false
+            showEnglishExample = true
         ),
         Medium(
             paddingDp = 10,
@@ -242,7 +242,7 @@ class JlptWordWidgetProvider : AppWidgetProvider() {
             exampleJaLines = 1,
             exampleEnLines = 1,
             showExample = true,
-            showEnglishExample = false
+            showEnglishExample = true
         ),
         Expanded(
             paddingDp = 12,
