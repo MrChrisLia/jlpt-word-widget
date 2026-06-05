@@ -162,24 +162,36 @@
         android:layout_marginBottom="3dp"
         android:background="#33FFFFFF" />
 
-    <TextView
-        android:id="@+id/widget_example_ja"
+    <LinearLayout
+        android:id="@+id/widget_example_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="今日はいい天気です。"
-        android:textColor="#C8CEDD"
-        android:textSize="11sp" />
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/widget_example_en"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="The weather is nice today."
-        android:textColor="#9FA7BA"
-        android:textSize="10sp"
-        android:textStyle="italic" />
+        <TextView
+            android:id="@+id/widget_example_ja"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="今日はいい天気です。"
+            android:textColor="#C8CEDD"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/widget_example_en"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:text="The weather is nice today."
+            android:textColor="#9FA7BA"
+            android:textSize="10sp"
+            android:textStyle="italic" />
+    </LinearLayout>
 </LinearLayout>

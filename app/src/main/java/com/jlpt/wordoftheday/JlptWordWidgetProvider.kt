@@ -140,7 +140,9 @@ class JlptWordWidgetProvider : AppWidgetProvider() {
         views.setViewVisibility(R.id.widget_refresh, if (compact) View.GONE else View.VISIBLE)
         views.setViewVisibility(R.id.widget_katakana_row, if (compact) View.GONE else View.VISIBLE)
         views.setViewVisibility(R.id.widget_divider, if (layoutMode.showExample) View.VISIBLE else View.GONE)
-        views.setViewVisibility(R.id.widget_example_ja, if (layoutMode.showExample) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.widget_example_row, if (layoutMode.showExample) View.VISIBLE else View.GONE)
+        // The English translation sits to the right of the Japanese sentence on
+        // the same row; it is only shown when there is width to spare for it.
         views.setViewVisibility(
             R.id.widget_example_en,
             if (layoutMode.showEnglishExample) View.VISIBLE else View.GONE
@@ -251,8 +253,8 @@ class JlptWordWidgetProvider : AppWidgetProvider() {
             englishSp = 13f,
             exampleJaSp = 11f,
             exampleEnSp = 10f,
-            exampleJaLines = 2,
-            exampleEnLines = 2,
+            exampleJaLines = 1,
+            exampleEnLines = 1,
             showExample = true,
             showEnglishExample = true
         );
