@@ -50,7 +50,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.work.ExistingPeriodicWorkPolicy
 import com.jlpt.wordoftheday.data.DictionarySources
 import com.jlpt.wordoftheday.data.Word
 import com.jlpt.wordoftheday.data.WordRepository
@@ -95,7 +94,7 @@ private fun JlptWordScreen(repository: WordRepository) {
                 refreshHour = hour
                 refreshMinute = minute
                 repository.setDailyRefreshTime(hour, minute)
-                DailyWordScheduler.schedule(appContext, ExistingPeriodicWorkPolicy.UPDATE)
+                DailyWordScheduler.reschedule(appContext)
             },
             refreshHour,
             refreshMinute,

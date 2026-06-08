@@ -2,6 +2,7 @@ package com.jlpt.wordoftheday
 
 import android.content.Context
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.jlpt.wordoftheday.data.WordRepository
@@ -22,31 +23,47 @@ object DailyWordScheduler {
     const val WORK_NAME = "daily_word_refresh"
 
     /**
-     * (Re)schedules the daily refresh from the time stored in preferences.
-     *
-     * Use [ExistingPeriodicWorkPolicy.KEEP] on app startup so an existing
-     * schedule is left untouched, and [ExistingPeriodicWorkPolicy.UPDATE]
-     * after the user changes the time so the new time takes effect.
+     * Ensures a daily refresh is scheduled, without disturbing an existing
+     * schedule. Safe to call on every app start.
      */
-    fun schedule(
-        context: Context,
-        policy: ExistingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE
-    ) {
+    fun ensureScheduled(context: Context) {
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            WORK_NAME,
+            ExistingPeriodicWorkPolicy.KEEP,
+            buildRequest(context)
+        )
+    }
+
+    /**
+     * Re-schedules the daily refresh to the time currently stored in
+     * preferences, taking effect immediately. Call this after the user changes
+     * the time.
+     *
+     * The existing work is cancelled first on purpose:
+     * [ExistingPeriodicWorkPolicy.UPDATE] keeps the previous period boundary
+     * and would ignore the new initial delay, so a changed time would never
+     * actually take effect. Cancelling forces a fresh schedule anchored to the
+     * new time.
+     */
+    fun reschedule(context: Context) {
+        val workManager = WorkManager.getInstance(context)
+        workManager.cancelUniqueWork(WORK_NAME)
+        workManager.enqueueUniquePeriodicWork(
+            WORK_NAME,
+            ExistingPeriodicWorkPolicy.KEEP,
+            buildRequest(context)
+        )
+    }
+
+    private fun buildRequest(context: Context): PeriodicWorkRequest {
         val repository = WordRepository(context)
         val initialDelayMillis = millisUntilNext(
             repository.getDailyRefreshHour(),
             repository.getDailyRefreshMinute()
         )
-
-        val dailyWork = PeriodicWorkRequestBuilder<JlptWordWidgetService>(1, TimeUnit.DAYS)
+        return PeriodicWorkRequestBuilder<JlptWordWidgetService>(1, TimeUnit.DAYS)
             .setInitialDelay(initialDelayMillis, TimeUnit.MILLISECONDS)
             .build()
-
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            WORK_NAME,
-            policy,
-            dailyWork
-        )
     }
 
     /** Milliseconds from now until the next [hour]:[minute] in local time. */
